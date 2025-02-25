@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main id="main" class="main">
+    <div class="container mt-5">
+        <h1 class="mb-4">Submit Your Proposal</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="id_titleFa" class="form-label">عنوان فارسی</label>
+                {{ form.titleFa }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_titleEn" class="form-label">Title in English</label>
+                {{ form.titleEn }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_keyWords" class="form-label">Keywords</label>
+                {{ form.keyWords }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_projectType" class="form-label">Project Type</label>
+                {{ form.projectType }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_research_pole" class="form-label">Research Pole</label>
+                {{ form.research_pole }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_research_pole_username" class="form-label">Research Pole Username</label>
+                {{ form.research_pole_username }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_developer" class="form-label">Developer</label>
+                {{ form.developer }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_costumer" class="form-label">Customer</label>
+                {{ form.costumer }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_nameAndNumberofPlan" class="form-label">Plan Name and Number</label>
+                {{ form.nameAndNumberofPlan }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_first_nameAndLast_name" class="form-label">First and Last Name</label>
+                {{ form.first_nameAndLast_name }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_work_place" class="form-label">Workplace</label>
+                {{ form.work_place }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_major" class="form-label">Major</label>
+                {{ form.major }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_work_address" class="form-label">Work Address</label>
+                {{ form.work_address }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_job" class="form-label">Job</label>
+                {{ form.job }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_work_phone" class="form-label">Work Phone</label>
+                {{ form.work_phone }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_email" class="form-label">Email Address</label>
+                {{ form.email }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_phone" class="form-label">Phone Number</label>
+                {{ form.phone }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Proposal</button>
+        </form>
+    </div>
+
+  
+</main>
+
+{% endblock %}

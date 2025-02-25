@@ -1,0 +1,6 @@
+<!-- templates/verification_email.html -->
+Hi {{ user.email }},
+
+Please verify your email by clicking the link below:
+
+http://{{ domain }}{% url 'verify_email' token=token %}

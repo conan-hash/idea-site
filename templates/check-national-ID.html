@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: auto;
+    }
+    .content {
+    flex: 1; /* This makes the main content area grow to fill space */
+}
+  </style>
+<main id="main" class="content">
+    <div class="pagetitle">
+        <h1>بررسی کد ملی</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">خانه</a></li>
+            <li class="breadcrumb-item active">کد ملی</li>
+          </ol>
+        </nav>
+      </div><!-- End Page Title -->  
+    <script>
+        async function checkNationalID() {
+            const nationalID = document.getElementById('nationalID').value;
+            const regex = /^\d{10}$/;
+            if (!regex.test(nationalID)) {
+                showPopup('کد ملی باید دقیقا ۱۰ رقم باشد!', 'خطا', '#');
+                return; 
+            }
+            const response = await fetch('/check-national-id/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                body: JSON.stringify({ national_id: nationalID })
+            });
+            console.log(JSON.stringify({ national_id: nationalID }));
+            const result = await response.json();
+
+            if (result.exists) {
+                showPopup('کاربر وجود دارد', 'ثبت ایده جدید', '/submit-new-idea/');
+            } else {
+                showPopup('کاربر جدید', 'ثبت کاربر جدید', '/register-new-user/');
+            }
+        }
+
+        function showPopup(message, buttonText, buttonLink) {
+            const popup = document.createElement('div');
+            popup.style.position = 'fixed';
+            popup.style.top = '50%';
+            popup.style.left = '50%';
+            popup.style.transform = 'translate(-50%, -50%)';
+            popup.style.backgroundColor = 'white';
+            popup.style.border = '1px solid black';
+            popup.style.padding = '20px';
+            popup.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+
+            const messageElem = document.createElement('p');
+            messageElem.textContent = message;
+            popup.appendChild(messageElem);
+
+            const button = document.createElement('a');
+            button.textContent = buttonText;
+            button.href = buttonLink;
+            button.style.display = 'block';
+            button.style.marginTop = '10px';
+            button.style.textAlign = 'center';
+            button.style.backgroundColor = '#007BFF';
+            button.style.color = 'white';
+            button.style.padding = '10px';
+            button.style.textDecoration = 'none';
+            button.style.borderRadius = '5px';
+
+            popup.appendChild(button);
+
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = 'بستن';
+            closeBtn.style.display = 'block';
+            closeBtn.style.marginTop = '10px';
+            closeBtn.onclick = () => popup.remove();
+            popup.appendChild(closeBtn);
+
+            document.body.appendChild(popup);
+        }
+
+        function getCSRFToken() {
+            const cookies = document.cookie.split(';');
+            for (const cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'csrftoken') {
+                    return value;
+                }
+            }
+            return '';
+        }
+    </script>
+    <div class="card p-4">
+    <div class="col-12">
+    <h6>کد ملی نوآور را در فرم زیر وارد کنید. در صورتی که این نوآور قبلا ایده ای در سیستم داشته باشد ایده های قبلی نشان داده شده و همچنین می توانید ایده جدید ثبت کنید. در غیر این صورت باید ابتدا مشخصات نوآور را وارد کنید.</h6>
+    <input type="text" id="nationalID" placeholder="کد ملی را وارد کنید">
+    <button onclick="checkNationalID()">بررسی</button>
+    </div>
+    </div>
+</main>
+
+
+
+{% endblock %}

@@ -1,0 +1,50 @@
+<!-- evaluate_idea.html -->
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>ارزیابی ایده</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        .container {
+            margin: auto;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3 class="text-center">ارزیابی ایده</h3>
+        <p><strong>عنوان ایده:</strong> {{ idea.title }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="judge1_score" class="form-label">امتیاز داور اول:</label>
+                {{ form.judge1_score }}
+            </div>
+            <div class="mb-3">
+                <label for="judge2_score" class="form-label">امتیاز داور دوم:</label>
+                {{ form.judge2_score }}
+            </div>
+            <div class="mb-3">
+                <label for="judge3_score" class="form-label">امتیاز داور سوم:</label>
+                {{ form.judge3_score }}
+            </div>
+            <div class="mb-3">
+                <label for="judge4_score" class="form-label">امتیاز داور چهارم:</label>
+                {{ form.judge4_score }}
+            </div>
+            <button type="submit" class="btn btn-primary">ذخیره امتیازات</button>
+            <a href="{% url 'idea_list' %}" class="btn btn-secondary">بازگشت</a>
+        </form>
+    </div>
+</body>
+</html>

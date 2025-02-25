@@ -1,0 +1,164 @@
+{% extends 'public_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">ایجاد حساب کاربری</h2>
+                    
+                    <!-- نمایش خطاهای فرم -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- نمایش پیام‌های سیستم -->
+                    {% if messages %}
+                        <div class="mb-3">
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- فیلد ایمیل -->
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">ایمیل</label>
+                            <input type="email" 
+                                   name="email" 
+                                   id="id_email" 
+                                   class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                                   placeholder="ایمیل خود را وارد کنید"
+                                   value="{{ form.email.value|default:'' }}">
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- فیلد رمز عبور -->
+                        <div class="mb-3">
+                            <label for="id_password1" class="form-label">رمز عبور</label>
+                            <input type="password" 
+                                   name="password1" 
+                                   id="id_password1" 
+                                   class="form-control {% if form.password1.errors %}is-invalid{% endif %}"
+                                   placeholder="رمز عبور خود را ایجاد کنید"
+                                   onkeyup="checkPasswordStrength(this.value)">
+                            {% if form.password1.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.password1.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <!-- متر قدرت رمز عبور -->
+                            <div class="mt-2">
+                                <div class="progress" style="height: 8px;">
+                                    <div id="password-strength-bar" 
+                                         class="progress-bar" 
+                                         role="progressbar" 
+                                         style="width: 0%">
+                                    </div>
+                                </div>
+                                <small id="password-strength-text" class="form-text text-muted"></small>
+                            </div>
+                        </div>
+
+                        <!-- تایید رمز عبور -->
+                        <div class="mb-4">
+                            <label for="id_password2" class="form-label">تکرار رمز عبور</label>
+                            <input type="password" 
+                                   name="password2" 
+                                   id="id_password2" 
+                                   class="form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                                   placeholder="رمز عبور را مجددا وارد کنید">
+                            {% if form.password2.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.password2.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">ثبت نام</button>
+                        </div>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <p class="mb-0">قبلا حساب کاربری دارید؟ 
+                            <a href="{% url 'login' %}" class="text-decoration-none">ورود به حساب</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function checkPasswordStrength(password) {
+    let strength = 0;
+    const bar = document.getElementById('password-strength-bar');
+    const text = document.getElementById('password-strength-text');
+
+    // معیارهای قدرت رمز عبور
+    if (password.length >= 8) strength += 1;
+    if (password.match(/[A-Z]/)) strength += 1;
+    if (password.match(/[0-9]/)) strength += 1;
+    if (password.match(/[^A-Za-z0-9]/)) strength += 1;
+
+    // بروزرسانی نوار و متن
+    switch(strength) {
+        case 0:
+            bar.style.width = '0%';
+            bar.className = 'progress-bar bg-danger';
+            text.textContent = 'خیلی ضعیف';
+            break;
+        case 1:
+            bar.style.width = '25%';
+            bar.className = 'progress-bar bg-danger';
+            text.textContent = 'ضعیف';
+            break;
+        case 2:
+            bar.style.width = '50%';
+            bar.className = 'progress-bar bg-warning';
+            text.textContent = 'متوسط';
+            break;
+        case 3:
+            bar.style.width = '75%';
+            bar.className = 'progress-bar bg-info';
+            text.textContent = 'قوی';
+            break;
+        case 4:
+            bar.style.width = '100%';
+            bar.className = 'progress-bar bg-success';
+            text.textContent = 'خیلی قوی';
+            break;
+    }
+}
+</script>
+
+<style>
+.progress-bar {
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+</style>
+
+{% endblock %}

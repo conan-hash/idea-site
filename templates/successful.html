@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت موفق</title>
+    <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/css/bootstrap.rtl.min.css' %}">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light background color */
+        }
+        .success-container {
+            margin-top: 100px; /* Top margin for spacing */
+            padding: 40px; /* Padding for content */
+            background-color: #ffffff; /* White background for card */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+        }
+        .success-icon {
+            font-size: 50px; /* Icon size */
+            color: #28a745; /* Success color */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="success-container text-center">
+        <div class="mb-4">
+            <span class="success-icon">&#10004;</span> <!-- Checkmark icon -->
+        </div>
+        <h2 class="mb-3">!فرم با موفقیت ثبت شد</h2>
+        <p class="lead">.از شما متشکریم. اطلاعات شما با موفقیت ذخیره شده است</p>
+        <a href="{% url 'new_idea' %}" class="btn btn-success">ثبت ایده جدید</a> <!-- Link back to the form -->
+        <a href="{% url 'home' %}" class="btn btn-secondary">برگشت به صفحه اصلی</a> <!-- Link to home page -->
+    </div>
+</div>
+
+</body>
+</html>

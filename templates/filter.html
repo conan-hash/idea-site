@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<head>
+  <title>ایده های ثبت شده در سیستم</title>
+</head>
+<style>
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: auto;
+    }
+    .title {
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            position: relative;
+        }
+        .filter-dropdown {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        .filter-icon {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .pagination {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .pagination button {
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+        }
+</style>
+ 
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div>   
+    
+    <div class="card p-4">
+        <div class="mb-4"> 
+            <h5 class="title">ایده های ثبت شده در سیستم</h5>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>توضیحات <span class="filter-icon">&#x25BC;</span>
+                        <div class="filter-dropdown"></div>
+                    </th>
+                    <th>نام <span class="filter-icon">&#x25BC;</span>
+                        <div class="filter-dropdown"></div>
+                    </th>
+                    <th>عنوان <span class="filter-icon">&#x25BC;</span>
+                        <div class="filter-dropdown"></div>
+                    </th>
+                    <th>شماره <span class="filter-icon">&#x25BC;</span>
+                        <div class="filter-dropdown"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically displayed here -->
+            </tbody>
+        </table>
+        <div class="pagination"></div>
+    
+    </div>
+
+    
+    <script>
+        const rowsPerPage = 20;
+        let currentPage = 1;
+        let filteredData = [];
+        let data = [
+        {% for idea in ideas %}
+        ["{{ idea.description|escapejs }}", "{{ idea.name|escapejs }}", "{{ idea.title|escapejs }}", "{{ idea.identifier }}"]{% if not forloop.last %},{% endif %}
+        {% endfor %}
+];
+console.log(data)
+function renderTable() {
+    let tbody = $("tbody");
+    tbody.empty();
+    let start = (currentPage - 1) * rowsPerPage;
+    let end = start + rowsPerPage;
+    filteredData.slice(start, end).forEach(row => {
+        tbody.append(`<tr>
+            <td>${row[0]}</td>
+            <td>${row[1]}</td>
+            <td>${row[2]}</td>
+            <td>${row[3]}</td>
+        </tr>`);
+    });
+}
+
+        function renderPagination() {
+            let totalPages = Math.ceil(filteredData.length / rowsPerPage);
+            let pagination = $(".pagination");
+            pagination.empty();
+            for (let i = 1; i <= totalPages; i++) {
+                pagination.append(`<button class="page-btn" data-page="${i}">${i}</button>`);
+            }
+        }
+
+        function populateFilters() {
+            $(".filter-dropdown").each(function(index) {
+                let uniqueValues = [...new Set(data.map(row => row[index]))];
+                let dropdown = $(this);
+                dropdown.empty();
+                dropdown.append(`<label><input type='checkbox' checked value='All'> All</label><br>`);
+                uniqueValues.forEach(value => {
+                    dropdown.append(`<label><input type='checkbox' checked value='${value}'> ${value}</label><br>`);
+                });
+            });
+        }
+
+        $(document).on("click", ".filter-icon", function() {
+            let dropdown = $(this).siblings(".filter-dropdown");
+            $(".filter-dropdown").not(dropdown).hide();
+            dropdown.toggle();
+        });
+
+        $(document).on("change", ".filter-dropdown input", function() {
+            let selectedFilters = [];
+            $(".filter-dropdown").each(function(index) {
+                let checkedValues = $(this).find("input:checked").map(function() {
+                    return $(this).val();
+                }).get();
+                if (!checkedValues.includes("All")) {
+                    selectedFilters[index] = checkedValues;
+                }
+            });
+            filteredData = data.filter(row => {
+                return Object.keys(selectedFilters).every(index => selectedFilters[index].includes(row[index]));
+            });
+            currentPage = 1;
+            renderTable();
+            renderPagination();
+        });
+
+        $(document).on("click", ".page-btn", function() {
+            currentPage = parseInt($(this).data("page"));
+            renderTable();
+        });
+
+        $(document).ready(function() {
+            filteredData = [...data];
+            renderTable();
+            renderPagination();
+            populateFilters();
+        });
+    </script>
+    
+    <script>
+        console.log(data);
+    </script>
+
+</main><!-- End #main -->
+{% endblock %}
