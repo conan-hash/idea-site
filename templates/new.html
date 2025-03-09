@@ -31,15 +31,27 @@
  
 <main id="main" class="main">
 
-    <div class="pagetitle">
-      <h1>Dashboard</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->   
+  <div class="pagetitle">
+      
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/home">خانه</a></li>
+        <li class="breadcrumb-item active">ثبت ایده</li>
+      </ol>
+    </nav>
+    
+    <style>
+    .breadcrumb {
+      direction: rtl;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/></svg>');
+  vertical-align: middle;
+  margin: 0 0.5rem;
+}
+    </style>
+  </div><!-- End Page Title -->   
     
 
 
@@ -49,69 +61,29 @@
   <form class="row g-3" method="POST">
     {% csrf_token %}
 
-  <div class="row mb-4">
-    <div class="col-6">
-      <label for="inputDate" class="form-label"><i class="bi bi-calendar3"></i> تاریخ</label>
-      <input type="date" class="form-control" id="inputDate" readonly>
-    </div>
-    <div class="col-6">
-      <label for="inputNumber" class="form-label"><i class="bi bi-hash"></i> شماره</label>
-      {{ form.identifier }}
-    </div>
-  </div>
-
     <div class="col-12">
-      <label for="inputTitle" class="form-label"><i class="bi bi-lightbulb"></i> عنوان ایده نوآورانه</label>
+      <label for="inputTitle" class="form-label"><i class="bi bi-lightbulb"></i>عنوان ایده نوآورانه</label>
       {{ form.title }}
     </div>
 
     <div class="col-12">
-      <label for="inputGoal" class="form-label"><i class="bi bi-bullseye"></i> هدف ایده</label>
+      <label for="inputTitle" class="form-label"><i class="bi bi-tags"></i>لغات کلیدی</label>
+      {{ form.keywords }}
+    </div>
+
+    <div class="col-12">
+      <label for="inputGoal" class="form-label"><i class="bi bi-bullseye"></i>هدف ایده</label>
       {{ form.goal }}
     </div>
 
     <div class="col-12">
-      <label for="textareaImportance" class="form-label"><i class="bi bi-exclamation-circle"></i> ضرورت و اهمیت ایده</label>
+      <label for="textareaImportance" class="form-label"><i class="bi bi-exclamation-circle"></i>ضرورت و اهمیت ایده</label>
       {{ form.importance }}
     </div>
 
     <div class="col-12">
-      <label for="textareaDetails" class="form-label"><i class="bi bi-clipboard"></i> توضیحات تکمیلی</label>
+      <label for="textareaDetails" class="form-label"><i class="bi bi-clipboard"></i>توضیحات تکمیلی</label>
       {{ form.details }}
-    </div>
-
-    <div class="col-12 mt-3">
-      <h6 class="fw-bold">ارائه دهنده</h6>
-    </div>
-
-    <div class="col-md-6">
-      <label for="firstName" class="form-label"><i class="bi bi-person"></i> نام</label>
-      {{ form.first_name }}
-    </div>
-
-    <div class="col-md-6">
-      <label for="lastName" class="form-label"><i class="bi bi-person-badge"></i> نام خانوادگی</label>
-      {{ form.last_name }}
-    </div>
-
-    <div class="col-md-6">
-      <label for="workPlace" class="form-label"><i class="bi bi-building"></i> محل اشتغال</label>
-      {{ form.work_place }}
-    </div>
-
-    <div class="col-md-6">
-      <label for="major" class="form-label"><i class="bi bi-book"></i> رشته تحصیلی</label>
-      {{ form.major }}
-    </div>
-
-    <div class="col-md-6">
-      <label for="email" class="form-label"><i class="bi bi-envelope"></i> ایمیل</label>
-      {{ form.email }}
-    </div>
-
-    <div class="col-md-6">
-      <label for="phone" class="form-label"><i class="bi bi-telephone"></i> شماره تماس</label>
-      {{ form.phone }}
     </div>
 
     <div class="text-center mt-4">
@@ -120,14 +92,6 @@
     </div>
   </form>
 </div>
-
-
-
-<script>
-  // Auto-fill the date field with today's date
-  document.getElementById('inputDate').valueAsDate = new Date();
-</script>
-
 
   </main><!-- End #main -->
 {% endblock %}

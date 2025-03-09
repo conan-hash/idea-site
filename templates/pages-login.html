@@ -50,7 +50,7 @@
           <!-- Email input -->
           <div data-mdb-input-init class="form-outline mb-4">
             <label class="form-label" for="form3Example3" style="text-align: right; width: 100%;">نام کاربری</label>
-            <input type="text" id="form3Example3" class="form-control form-control-lg" name="username"
+            <input type="text" id="form3Example3" class="form-control form-control-lg" name="email"
               placeholder="" />
           </div>
 
@@ -80,6 +80,15 @@
           <p>آیا حساب کاربری ندارید؟ <a href="{% url 'signup' %}">ثبت نام کنید</a></p>
         </div>
 
+        {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
       </div>
     </div>
   </div>

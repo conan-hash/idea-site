@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, logout, login as auth_login
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
@@ -8,8 +8,9 @@ from django.contrib.auth.views import LoginView
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+from django.views.decorators.http import require_POST
 
-
+@login_required
 def home(request):
 	context = {
 		'username': request.user
@@ -19,12 +20,12 @@ def home(request):
 
 def user_login(request):
     if request.method == "POST":
-        email = request.POST.get('email')  # Changed from 'username' to 'email'
+        email = request.POST.get('email').lower().strip()   # Changed from 'username' to 'email'
         password = request.POST.get('password')
 
         # Check if user with email exists
         if not CustomUser.objects.filter(email=email).exists():  # Check email instead of username
-            messages.error(request, 'Invalid Email')
+            messages.error(request, 'خطا در شناسایی کاربر')
             return redirect('login')
             
         # Authenticate using email instead of username
@@ -38,12 +39,12 @@ def user_login(request):
                     auth_login(request, user)  # Use renamed auth_login to avoid conflict
                     return redirect('/home/')
                 else:
-                    messages.error(request, 'Account is disabled')
+                    messages.error(request, 'اکانت غیر فعال است')
             else:
-                messages.error(request, 'Email not verified. Please check your inbox.')
+                messages.error(request, 'ایمیل تایید نشده است. لطفاایمیل خود را چک کنید')
             return redirect('login')
         else:
-            messages.error(request, 'Invalid Password')
+            messages.error(request, 'خطا در شناسایی کاربر')
             return redirect('login')
     
     return render(request, 'pages-login.html')
@@ -81,7 +82,7 @@ def verify_email(request, token):
         user = CustomUser.objects.get(email_token=token)
         if not user.is_verified:
             user.is_verified = True
-            user.is_active = True  # Activate the user
+            user.is_active = True 
             user.save()
             auth_login(request, user)
             return redirect('complete_profile')  # Redirect to profile completion
@@ -91,7 +92,7 @@ def verify_email(request, token):
         return render(request, 'invalid_token.html')
 
 
-
+@login_required
 def complete_profile(request):
     if not request.user.is_authenticated or not request.user.is_verified:
         return redirect('login')
@@ -114,3 +115,8 @@ class CustomLoginView(LoginView):
             form.get_user().auth_token.delete()  # Optional: Delete token if used
             return render(self.request, 'not_verified.html')
         return super().form_valid(form)
+    
+
+def user_logout(request):
+    logout(request) 
+    return redirect('login')

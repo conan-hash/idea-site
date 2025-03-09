@@ -1,19 +1,19 @@
 from django import forms
-from .models import Idea, Proposal
+from .models import Idea, Proposal, Contributor
+from django.forms import inlineformset_factory
 
 class IdeaForm(forms.ModelForm):
     class Meta:
         model = Idea
-        fields = ['title', 'goal', 'importance', 'details', 'date', 'identifier']
+        fields = ['title', 'goal', 'importance', 'details', 'keywords']
         widgets = {
         'title' : forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
+        'keywords': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
         'goal' : forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-        'importance' : forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-        'details' : forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-        'date' : forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-        'identifier' : forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
+        'importance' : forms.Textarea(attrs={'class': 'form-control', 'dir': 'rtl'}),
+        'details' : forms.Textarea(attrs={'class': 'form-control', 'dir': 'rtl'}),
     }
-        
+
 
 class ProposalForm(forms.ModelForm):
     class Meta:
@@ -57,3 +57,15 @@ class EvaluationForm(forms.ModelForm):
 
 
 
+class ContributorForm(forms.ModelForm):
+    class Meta:
+        model = Contributor
+        fields = ['name', 'contribution_percent_idea', 'contribution_percent_project']
+
+ContributorFormSet = inlineformset_factory(
+    Idea,                      
+    Contributor,             
+    form=ContributorForm,      
+    extra=1,                   
+    can_delete=False,          
+)

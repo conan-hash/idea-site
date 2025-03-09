@@ -32,8 +32,10 @@
             <span class="success-icon">&#10004;</span> <!-- Checkmark icon -->
         </div>
         <h2 class="mb-3">!فرم با موفقیت ثبت شد</h2>
-        <p class="lead">.از شما متشکریم. اطلاعات شما با موفقیت ذخیره شده است</p>
-        <a href="{% url 'new_idea' %}" class="btn btn-success">ثبت ایده جدید</a> <!-- Link back to the form -->
+        <div class="alert alert-success">
+            ایده شما با موفقیت ثبت شد! شناسه ایده: <strong>{{ identifier }}</strong>
+        </div>
+        <a href="{% url 'submit_new_idea' %}" class="btn btn-success">ثبت ایده جدید</a> <!-- Link back to the form -->
         <a href="{% url 'home' %}" class="btn btn-secondary">برگشت به صفحه اصلی</a> <!-- Link to home page -->
     </div>
 </div>

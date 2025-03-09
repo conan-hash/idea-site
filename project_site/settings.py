@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'authentication.middleware.ProfileCompletionMiddleware',
+    
 ]
 
 AUTH_USER_MODEL = 'authentication.CustomUser'
@@ -136,4 +136,4 @@ EMAIL_HOST = 'smtp.gmail.com'  # Replace with your email provider's SMTP server
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'm.hoseini2401@gmail.com'  # Replace with your email address
-EMAIL_HOST_PASSWORD = 'Maryam_email'  # Replace with your email password
+EMAIL_HOST_PASSWORD = 'djul xhro iylz iqub'  # Replace with your email password

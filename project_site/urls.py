@@ -33,17 +33,18 @@ urlpatterns = [
     path('verify-email/<str:token>/', verify_email, name='verify_email'),
     path('complete-profile/', complete_profile, name='complete_profile'),
     path('verification-sent/', TemplateView.as_view(template_name='verification_sent.html'), name='verification_sent'),
-
-    
-    #path('users-profile/', user_profile, name='users-profile'), #user-profile
-	#path('new-idea/', new_idea, name='new_idea'), #new-idea
-    #path('ideas/', idea_list, name='idea_list'), #list all ideas
+    path('home/user-profile/', user_profile, name='user_profile'),
+	path('home/user-ideas/', user_ideas, name='user_ideas'), 
+    path('home/ideas/', all_ideas, name='all_ideas'),
+    path('home/track-idea/<str:identifier>/', track_idea, name='track-idea'),
+    path('home/referee/', referee, name='referee'),
+    path('logout/', user_logout, name='logout'),
     #path('ideas/<int:pk>/', idea_detail, name='idea_detail'),
-    #path('successful/', lambda request: render(request, 'successful.html'), name='successful'),
+    path('home/successful/', successful, name='successful'),
     #path('ideas/<int:pk>/evaluate/', evaluate_idea, name='evaluate_idea'),
     #path('proposal/submit/', submit_proposal, name='submit_proposal'),
     #path('check-national-id/', check_national_id, name='check_national_id'),
-    #path('submit-new-idea/', submit_new_idea, name='submit_new_idea'),
+    path('home/submit-new-idea/', submit_new_idea, name='submit_new_idea'),
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),

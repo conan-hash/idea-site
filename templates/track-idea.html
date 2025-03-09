@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">خانه</a></li>
+          <li class="breadcrumb-item"><a href="/home/user-ideas">ایده های من</a></li>
+          <li class="breadcrumb-item active">پیگیری ایده</li>
+        </ol>
+      </nav>
+      
+      <style>
+      .breadcrumb {
+        direction: rtl;
+      }
+
+      .table thead th {
+            background-color: #e9ecef;
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table input {
+            min-width: 100px;
+        }
+        .required::after {
+            content: "*";
+            color: red;
+            margin-right: 4px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .card-body {
+            overflow: visible !important;
+        }
+
+        .description-column {
+        min-width: 300px !important;
+        width: 35% !important;
+    }
+      
+      .breadcrumb-item + .breadcrumb-item::before {
+    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/></svg>');
+    vertical-align: middle;
+    margin: 0 0.5rem;
+}
+      </style>
+    </div><!-- End Page Title -->  
+
+    
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"></h5>
+    
+          <!-- Bordered Tabs Justified -->
+          <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#idea" type="button" role="tab" aria-controls="home" aria-selected="true">وضعیت اولیه</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#proposal" type="button" role="tab" aria-controls="profile" aria-selected="false">پروپوزال</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#referee" type="button" role="tab" aria-controls="contact" aria-selected="false">ارائه و داوری</button>
+            </li>
+          </ul>
+          <div class="tab-content pt-2" id="borderedTabJustifiedContent">
+            <div class="tab-pane fade show active" id="idea" role="tabpanel" aria-labelledby="idea-tab">
+                <div class="container">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ idea.title }}</h5>
+                            <p class="card-text"><strong>تاریخ ثبت:</strong> {{ idea.date }}</p>
+                            <p class="card-text"><strong>لغات کلیدی:</strong> {{ idea.keywords }}</p>
+                            <p class="card-text"><strong>هدف:</strong> {{ idea.goal }}</p>
+                            <p class="card-text"><strong>ضرورت و اهمیت:</strong> {{ idea.importance }}</p>
+                            <p class="card-text"><strong>توضیحات تکمیلی:</strong> {{ idea.details }}</p>
+                            <p class="card-text"><strong>وضعیت:</strong> {{ idea.status }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="proposal" role="tabpanel" aria-labelledby="proposal-tab">
+                <style>
+                    body {
+                        direction: rtl;
+                    }
+                    .form-step {
+                        display: none;
+                    }
+                    .form-step.active {
+                        display: block;
+                    }
+                </style>
+            
+            
+                <div class="container mt-1">
+                    <form method="post" id="proposalForm">
+                        {% csrf_token %}
+                        {{ formset.management_form }}
+                        <!-- Step 1: General Information -->
+                        <div class="form-step active" id="step1">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2>کلیات</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="projectTitleFa" class="form-label">عنوان پروژه به زبان فارسی:</label>
+                                        <input type="text" class="form-control" id="projectTitleFa" name="projectTitleFa" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="projectTitleEn" class="form-label">عنوان پروژه به زبان انگلیسی:</label>
+                                        <input type="text" class="form-control" id="projectTitleEn" name="projectTitleEn" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="keywords" class="form-label">تعریف واژه‌های کلیدی:</label>
+                                        <textarea class="form-control" id="keywords" name="keywords" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="projectType" class="form-label">نوع پروژه:</label>
+                                        <select class="form-select" id="projectType" name="projectType" required>
+                                            <option value="phd">پایان نامه دکتری</option>
+                                            <option value="masters">پایان نامه کارشناسی ارشد</option>
+                                            <option value="research">پروژه پژوهشی</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Step 2: Project Details -->
+                        <div class="form-step" id="step2">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2>جزئیات پروژه</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="researchHub" class="form-label">هاب پژوهشی:</label>
+                                        <input type="text" class="form-control" id="researchHub" name="researchHub" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="researchPole" class="form-label">قطب پژوهشی:</label>
+                                        <input type="text" class="form-control" id="researchPole" name="researchPole" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="developer" class="form-label">توسعه دهنده:</label>
+                                        <input type="text" class="form-control" id="developer" name="developer" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="finalCustomer" class="form-label">متقاضی/مشتری نهایی:</label>
+                                        <input type="text" class="form-control" id="finalCustomer" name="finalCustomer" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Step 3: Project Importance -->
+                        <div class="form-step" id="step3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2>اهمیت پروژه</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="projectImportance" class="form-label">اهمیت پروژه:</label>
+                                        <select class="form-select" id="projectImportance" name="projectImportance" required>
+                                            <option value="fundamental">بنیادی</option>
+                                            <option value="applied">کاربردی</option>
+                                            <option value="developmental">توسعه‌ای</option>
+                                            <option value="studies">مطالعاتی</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="researchGroup" class="form-label">گروه پژوهشی:</label>
+                                        <input type="text" class="form-control" id="researchGroup" name="researchGroup" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="projectScale" class="form-label">مقیاس پروژه:</label>
+                                        <select class="form-select" id="projectScale" name="projectScale" required>
+                                            <option value="feasibility">امکان سنجی</option>
+                                            <option value="lab">آزمایشگاهی</option>
+                                            <option value="smallPilot">پایلوت کوچک</option>
+                                            <option value="largePilot">پایلوت بزرگ</option>
+                                            <option value="industrial">صنعتی</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Step 4: Project Execution -->
+                        <div class="form-step" id="step4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2>اجرای پروژه</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="projectGoals" class="form-label">هدف از اجرای پژوهش و ضرورت انجام پروژه:</label>
+                                        <textarea class="form-control" id="projectGoals" name="projectGoals" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="expectedOutcomes" class="form-label">دستاوردهای مورد انتظار پروژه:</label>
+                                        <textarea class="form-control" id="expectedOutcomes" name="expectedOutcomes" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="economicBenefits" class="form-label">صرفه اقتصادی حاصل از اجرای پروژه:</label>
+                                        <textarea class="form-control" id="economicBenefits" name="economicBenefits" required></textarea>
+                                    </div>
+
+                                    <div class="mt-4"></div>
+                                        <div class="table-responsive"> 
+                                            <!-- Main Activity Table -->
+                                            <table class="table table-bordered table-striped" id="projectTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th rowspan="3" class="align-middle">کد WBS</th>
+                                                        <th rowspan="3" class="align-middle description-column">شرح فعالیت</th>
+                                                        <th rowspan="3" class="align-middle">ارزش وزنی</th>
+                                                        <th rowspan="3" class="align-middle">پیش‌نیاز</th>
+                                                        <th rowspan="3" class="align-middle">مدت زمان (روز)</th>
+                                                        <th rowspan="3" class="align-middle">تاریخ شروع</th>
+                                                        <th rowspan="3" class="align-middle">تاریخ پایان</th>
+                                                        <th colspan="8" class="text-center">هزینه‌های پروژه به تفکیک فعالیت‌ها</th>
+                                                        <th rowspan="2" class="align-middle">هزینه کل</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>نیروی انسانی</th>
+                                                        <th colspan="2">مواد و تجهیزات</th>
+                                                        <th colspan="2">هزینه سفر</th>
+                                                        <th>آزمایشات</th>
+                                                        <th colspan="2">سایر هزینه‌ها</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>ریالی</th>
+                                                        <th>ریالی</th>
+                                                        <th>ارزی</th>
+                                                        <th>ریالی</th>
+                                                        <th>ارزی</th>
+                                                        <th>ریالی</th>
+                                                        <th>ارزی</th>
+                                                        <th>ریالی</th>
+                                                        <th>ریالی</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Initial Row -->
+                                                    <tr>
+                                                        <td><input type="text" class="form-control" name="activities[0][wbs]" required></td>
+                                                        <td><input type="text" class="form-control" name="activities[0][description]" required></td>
+                                                        <td><input type="number" class="form-control" name="activities[0][weight]" step="0.01" required></td>
+                                                        <td><input type="text" class="form-control" name="activities[0][prerequisite]"></td>
+                                                        <td><input type="number" class="form-control" name="activities[0][duration]" required></td>
+                                                        <td><input type="date" class="form-control" name="activities[0][start_date]" required></td>
+                                                        <td><input type="date" class="form-control" name="activities[0][end_date]" required></td>
+                                                        <td><input type="number" class="form-control" name="activities[0][human_cost_rial]" step="1000"></td>
+                                                        <td><input type="number" class="form-control" name="activities[0][material_cost_rial]" step="1000"></td>
+                                                        <td><input type="number" class="form-control" name="activities[0][material_cost_euro]" step="1000"></td>
+                                                        <td><input type="number" class="form-control" name="activities[0][travel_cost_rial]" step="1000"></td>
+                                                        <td><input type="number" class="form-control" name="activities[0][travel_cost_euro]" step="1000"></td>
+                                                        <td><input type="number" class="form-control" name="activities[0][test_cost_rial]" step="1000"></td>
+                                                        <td><input type="number" class="form-control" name="activities[0][other_cost_rial]" step="1000"></td>
+                                                        <td><input type="number" class="form-control" name="activities[0][other_cost_euro]" step="1000"></td>
+                                                        <td><input type="number" class="form-control total" name="activities[0][total]" readonly></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                
+                                            <!-- Control Buttons -->
+                                            <div class="d-flex justify-content-between mt-4">
+                                                <button type="button" class="btn btn-primary" onclick="addRow()">
+                                                    <i class="bi bi-plus-lg"></i> افزودن ردیف جدید
+                                                </button>
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="bi bi-check-lg"></i> ثبت نهایی
+                                                </button>
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
+                                    <!-- Bootstrap JS and dependencies -->
+                                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                                    
+                                    <!-- Custom Script -->
+                                    <script>
+                                        let rowCounter = 1;
+                                
+                                        function addRow() {
+                                            const tableBody = document.querySelector('#projectTable tbody');
+                                            const newRow = document.createElement('tr');
+                                            
+                                            newRow.innerHTML = `
+                                                <td><input type="text" class="form-control" name="activities[${rowCounter}][wbs]" required></td>
+                                                <td><input type="text" class="form-control" name="activities[${rowCounter}][description]" required></td>
+                                                <td><input type="number" class="form-control" name="activities[${rowCounter}][weight]" step="0.01" required></td>
+                                                <td><input type="text" class="form-control" name="activities[${rowCounter}][prerequisite]"></td>
+                                                <td><input type="number" class="form-control" name="activities[${rowCounter}][duration]" required></td>
+                                                <td><input type="date" class="form-control" name="activities[${rowCounter}][start_date]" required></td>
+                                                <td><input type="date" class="form-control" name="activities[${rowCounter}][end_date]" required></td>
+                                                <td><input type="number" class="form-control cost-input" name="activities[${rowCounter}][human_cost]" step="1000"></td>
+                                                <td><input type="number" class="form-control cost-input" name="activities[${rowCounter}][material_cost]" step="1000"></td>
+                                                <td><input type="number" class="form-control cost-input" name="activities[${rowCounter}][travel_cost]" step="1000"></td>
+                                                <td><input type="number" class="form-control cost-input" name="activities[${rowCounter}][test_cost]" step="1000"></td>
+                                                <td><input type="number" class="form-control cost-input" name="activities[${rowCounter}][other_cost]" step="1000"></td>
+                                                <td><input type="number" class="form-control subtotal" name="activities[${rowCounter}][subtotal]" readonly></td>
+                                                <td><input type="number" class="form-control total" name="activities[${rowCounter}][total]" readonly></td>
+                                            `;
+                                
+                                            tableBody.appendChild(newRow);
+                                            rowCounter++;
+                                        }
+                                    </script>
+
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Navigation Buttons -->
+                        <div class="form-navigation mt-3">
+                            <button type="button" class="btn btn-secondary" id="prevBtn" onclick="prevStep()">قبلی</button>
+                            <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">بعدی</button>
+                        </div>
+                    </form>
+                </div>
+            
+                <!-- Bootstrap JS -->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                <script>
+                    let currentStep = 0;
+                    const steps = document.querySelectorAll('.form-step');
+            
+                    function showStep(stepIndex) {
+                        steps.forEach((step, index) => {
+                            step.classList.toggle('active', index === stepIndex);
+                        });
+                        document.getElementById('prevBtn').style.display = stepIndex === 0 ? 'none' : 'inline-block';
+                        document.getElementById('nextBtn').style.display = stepIndex === steps.length - 1 ? 'none' : 'inline-block';
+                    }
+            
+                    function nextStep() {
+                        if (currentStep < steps.length - 1) {
+                            currentStep++;
+                            showStep(currentStep);
+                        }
+                    }
+            
+                    function prevStep() {
+                        if (currentStep > 0) {
+                            currentStep--;
+                            showStep(currentStep);
+                        }
+                    }
+            
+                    // Initialize the form
+                    showStep(currentStep);
+                </script>
+            </div>
+            <div class="tab-pane fade" id="referee" role="tabpanel" aria-labelledby="referee-tab">
+              Saepe animi et soluta ad odit soluta sunt. Nihil quos omnis animi debitis cumque. Accusantium quibusdam perspiciatis qui qui omnis magnam. Officiis accusamus impedit molestias nostrum veniam. Qui amet ipsum iure. Dignissimos fuga tempore dolor.
+            </div>
+          </div><!-- End Bordered Tabs Justified -->
+    
+        </div>
+      </div>
+
+  </main><!-- End #main -->
+  {% endblock %}
+
+
+
+
+
+
+
+
