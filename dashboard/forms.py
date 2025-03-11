@@ -13,19 +13,16 @@ class IdeaForm(forms.ModelForm):
         'importance' : forms.Textarea(attrs={'class': 'form-control', 'dir': 'rtl'}),
         'details' : forms.Textarea(attrs={'class': 'form-control', 'dir': 'rtl'}),
     }
-
+        
 
 class ProposalForm(forms.ModelForm):
     class Meta:
         model = Proposal  
         fields = [
-            'titleFa', 'titleEn', 'keyWords', 'projectType', 'research_pole', 'research_pole_username',
+            'projectType', 'research_pole', 'research_pole_username',
             'developer', 'costumer', 'nameAndNumberofPlan'
         ]
         widgets = {
-            'titleFa': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-            'titleEn': forms.TextInput(attrs={'class': 'form-control'}),
-            'keyWords': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'dir': 'rtl'}),
             'projectType': forms.Select(attrs={'class': 'form-select', 'dir': 'rtl'}),
             'research_pole': forms.Select(attrs={'class': 'form-select', 'dir': 'rtl'}),
             'research_pole_username': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),

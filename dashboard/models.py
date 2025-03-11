@@ -12,13 +12,13 @@ phone_regex = RegexValidator(
 
 
 class Proposal(models.Model):
-    titleFa = models.CharField(max_length=255, verbose_name="عنوان فارسی")
-    titleEn = models.CharField(max_length=255, verbose_name="عنوان انگلیسی")
-    keyWords = models.TextField(verbose_name="کلمات کلیدی")
+    projectTitleFa = models.CharField(max_length=255, verbose_name="عنوان فارسی")
+    projectTitleEn = models.CharField(max_length=255, verbose_name="عنوان انگلیسی")
+    keywords = models.TextField(verbose_name="کلمات کلیدی")
     projectType = models.CharField(max_length=100, choices=[
         ('research', 'پروژه پژوهشی'),
         ('phd', 'پایان نامه دکتری'),
-        ('master', 'پایان نامه کارشناسی ارشد')
+        ('masters', 'پایان نامه کارشناسی ارشد')
     ], verbose_name="نوع پروژه")
     research_pole = models.CharField(max_length=255, verbose_name="قطب پژوهشی")
     research_pole_username = models.CharField(max_length=255, verbose_name="نام موسسه")

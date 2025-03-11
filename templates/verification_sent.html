@@ -1,7 +1,15 @@
-<!-- templates/verification_sent.html -->
 {% extends 'public_base.html' %}
-
+{% block title %}فعال سازی اکانت{% endblock %}
 {% block content %}
-<h2>Verification Email Sent</h2>
-<p>Check your email to activate your account.</p>
+<div class="container text-center mt-5">
+    <div class="card shadow-lg p-4 mx-auto" style="max-width: 500px;">
+        <h2 class="mb-4">ایمیل فعال‌سازی ارسال شد</h2>
+        <p class="mb-4">لطفا برای فعال‌سازی حساب کاربری خود، ایمیل خود را بررسی کنید.</p>
+        
+        <!-- Button to go to the login page -->
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+            بازگشت به صفحه ورود
+        </a>
+    </div>
+</div>
 {% endblock %}

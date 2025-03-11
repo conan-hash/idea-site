@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, logout, login as auth_login
+from django.contrib.auth import authenticate, logout, login 
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
@@ -20,23 +20,19 @@ def home(request):
 
 def user_login(request):
     if request.method == "POST":
-        email = request.POST.get('email').lower().strip()   # Changed from 'username' to 'email'
+        email = request.POST.get('email').lower().strip()   
         password = request.POST.get('password')
 
-        # Check if user with email exists
-        if not CustomUser.objects.filter(email=email).exists():  # Check email instead of username
+        if not CustomUser.objects.filter(email=email).exists():  
             messages.error(request, 'خطا در شناسایی کاربر')
             return redirect('login')
             
-        # Authenticate using email instead of username
         user = authenticate(request, email=email, password=password)
         
         if user is not None:
-            # Check if email is verified
             if user.is_verified:
-                # Check if user is active
                 if user.is_active:
-                    auth_login(request, user)  # Use renamed auth_login to avoid conflict
+                    login(request, user)  
                     return redirect('/home/')
                 else:
                     messages.error(request, 'اکانت غیر فعال است')
@@ -84,7 +80,7 @@ def verify_email(request, token):
             user.is_verified = True
             user.is_active = True 
             user.save()
-            auth_login(request, user)
+            login(request, user)
             return redirect('complete_profile')  # Redirect to profile completion
         else:
             return redirect('login')  # Already verified
@@ -98,7 +94,7 @@ def complete_profile(request):
         return redirect('login')
     
     if request.method == 'POST':
-        form = ProfileCompletionForm(request.POST, request.FILES, instance=request.user)
+        form = ProfileCompletionForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect('home')
@@ -106,15 +102,6 @@ def complete_profile(request):
         form = ProfileCompletionForm(instance=request.user)
     return render(request, 'complete_profile.html', {'form': form})
 
-
-class CustomLoginView(LoginView):
-    def form_valid(self, form):
-        user = form.get_user()
-        if not user.is_verified:
-            # Log out unverified users
-            form.get_user().auth_token.delete()  # Optional: Delete token if used
-            return render(self.request, 'not_verified.html')
-        return super().form_valid(form)
     
 
 def user_logout(request):

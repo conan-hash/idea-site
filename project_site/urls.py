@@ -39,6 +39,7 @@ urlpatterns = [
     path('home/track-idea/<str:identifier>/', track_idea, name='track-idea'),
     path('home/referee/', referee, name='referee'),
     path('logout/', user_logout, name='logout'),
+    path('home/user-profile/', user_profile, name='user_profile'),
     #path('ideas/<int:pk>/', idea_detail, name='idea_detail'),
     path('home/successful/', successful, name='successful'),
     #path('ideas/<int:pk>/evaluate/', evaluate_idea, name='evaluate_idea'),
