@@ -31,7 +31,7 @@ class SignUpForm(UserCreationForm):
 class ProfileCompletionForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('first_name', 'last_name', 'work_place', 'major', 'phone_number', 'national_id')
+        fields = ('first_name', 'last_name', 'work_place', 'major', 'phone_number', 'national_id','personnel_number', 'job')
         widgets = {'first_name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'required': True,
@@ -44,11 +44,15 @@ class ProfileCompletionForm(forms.ModelForm):
                 'minlength': 2,
                 'maxlength': 255,
             }),
+            'major': forms.TextInput(attrs={
+                'class': 'form-control',
+                'required': True,
+            }),
             'work_place': forms.TextInput(attrs={
                 'class': 'form-control',
                 'required': True,
             }),
-            'major': forms.Select(attrs={
+            'job': forms.TextInput(attrs={
                 'class': 'form-control',
                 'required': True,
             }),
@@ -61,7 +65,12 @@ class ProfileCompletionForm(forms.ModelForm):
                 'required': True,
                 'length': 10,
             }),
+            'personnel_number': forms.NumberInput(attrs={
+                'class': 'form-control',
+            }),
         }
+
+
 
 class EditUserProfileForm(forms.ModelForm):
     class Meta:

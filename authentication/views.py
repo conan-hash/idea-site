@@ -30,12 +30,13 @@ def user_login(request):
         user = authenticate(request, email=email, password=password)
         
         if user is not None:
-            if user.is_verified:
-                if user.is_active:
+            if user.is_active:
+                if user.is_verified:
                     login(request, user)  
                     return redirect('/home/')
                 else:
-                    messages.error(request, 'اکانت غیر فعال است')
+                    login(request, user) 
+                    return redirect('complete_profile')
             else:
                 messages.error(request, 'ایمیل تایید نشده است. لطفاایمیل خود را چک کنید')
             return redirect('login')
@@ -76,12 +77,10 @@ def signup(request):
 def verify_email(request, token):
     try:
         user = CustomUser.objects.get(email_token=token)
-        if not user.is_verified:
-            user.is_verified = True
-            user.is_active = True 
+        if not user.is_active:
+            user.is_active = True
             user.save()
-            login(request, user)
-            return redirect('complete_profile')  # Redirect to profile completion
+            return redirect('verification_success')  # Redirect to successful verification
         else:
             return redirect('login')  # Already verified
     except CustomUser.DoesNotExist:
@@ -89,14 +88,17 @@ def verify_email(request, token):
 
 
 @login_required
-def complete_profile(request):
-    if not request.user.is_authenticated or not request.user.is_verified:
+def  complete_profile(request):
+    if not request.user.is_authenticated or not request.user.is_active:
         return redirect('login')
     
     if request.method == 'POST':
         form = ProfileCompletionForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
+            request.user.is_verified = True
+            request.user.save()
+
             return redirect('home')
     else:
         form = ProfileCompletionForm(instance=request.user)

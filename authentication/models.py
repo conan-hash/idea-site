@@ -24,13 +24,14 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)  # Email is the unique identifier
     is_verified = models.BooleanField(default=False)  # Email verification flag
     email_token = models.CharField(max_length=100, null=True, blank=True)  # Verification token
-
     first_name = models.CharField(max_length=255, null=True)
     last_name = models.CharField(max_length=255, null=True)
     work_place = models.CharField(max_length=255, null=True)
+    job = models.CharField(max_length=255, null=True)
     major = models.CharField(max_length=255, null=True)
     phone_number = models.CharField(max_length=15, null=True)
     national_id = models.CharField(max_length=10, null=True)
+    personnel_number = models.CharField(max_length=10, null=True)
 
     #profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     

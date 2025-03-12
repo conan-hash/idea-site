@@ -33,6 +33,7 @@ urlpatterns = [
     path('verify-email/<str:token>/', verify_email, name='verify_email'),
     path('complete-profile/', complete_profile, name='complete_profile'),
     path('verification-sent/', TemplateView.as_view(template_name='verification_sent.html'), name='verification_sent'),
+    path('verification-success/', TemplateView.as_view(template_name='verification_success.html'), name='verification_success'),
     path('home/user-profile/', user_profile, name='user_profile'),
 	path('home/user-ideas/', user_ideas, name='user_ideas'), 
     path('home/ideas/', all_ideas, name='all_ideas'),

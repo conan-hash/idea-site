@@ -1,4 +1,6 @@
 {% extends 'public_base.html' %}
+{% load widget_tweaks %}
+{% load error_filter %}
 
 {% block title %}فعال‌سازی اکانت{% endblock %}
 
@@ -15,12 +17,20 @@
           </div>
 
           <!-- Form -->
-          <form method="post">
+          <form method="post" novalidate
+          >
             {% csrf_token %}
             <div class="row mb-3">
               <label for="fullName" class="col-md-4 col-lg-3 col-form-label">نام</label>
               <div class="col-md-8 col-lg-9">
                 {{ form.first_name }}
+                {% if form.first_name.errors %}
+                <div class="text-danger">
+                  {% for error in form.first_name.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
               </div>
             </div>
 
@@ -28,20 +38,13 @@
               <label for="fullName" class="col-md-4 col-lg-3 col-form-label">نام خانوادگی</label>
               <div class="col-md-8 col-lg-9">
                 {{ form.last_name }}
-              </div>
-            </div>
-
-            <div class="row mb-3">
-              <label for="company" class="col-md-4 col-lg-3 col-form-label">شرکت</label>
-              <div class="col-md-8 col-lg-9">
-                {{ form.work_place }}
-              </div>
-            </div>
-
-            <div class="row mb-3">
-              <label for="Job" class="col-md-4 col-lg-3 col-form-label">شغل</label>
-              <div class="col-md-8 col-lg-9">
-                <input name="job" type="text" class="form-control" id="Job">
+                {% if form.last_name.errors %}
+                <div class="text-danger">
+                  {% for error in form.last_name.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
               </div>
             </div>
 
@@ -49,6 +52,55 @@
               <label for="national_id" class="col-md-4 col-lg-3 col-form-label">کد ملی</label>
               <div class="col-md-8 col-lg-9">
                 {{ form.national_id }}
+                {% if form.national_id.errors %}
+                <div class="text-danger">
+                  {% for error in form.national_id.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="major" class="col-md-4 col-lg-3 col-form-label">رشته تحصیلی</label>
+              <div class="col-md-8 col-lg-9">
+                {{ form.major }}
+                {% if form.major.errors %}
+                <div class="text-danger">
+                  {% for error in form.major.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="company" class="col-md-4 col-lg-3 col-form-label">دانشگاه/شرکت</label>
+              <div class="col-md-8 col-lg-9">
+                {{ form.work_place }}
+                {% if form.work_place.errors %}
+                <div class="text-danger">
+                  {% for error in form.work_place.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="Job" class="col-md-4 col-lg-3 col-form-label">شغل</label>
+              <div class="col-md-8 col-lg-9">
+                {{ form.job }}
+                {% if form.job.errors %}
+                <div class="text-danger">
+                  {% for error in form.job.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
               </div>
             </div>
 
@@ -56,13 +108,42 @@
               <label for="Phone" class="col-md-4 col-lg-3 col-form-label">تلفن</label>
               <div class="col-md-8 col-lg-9">
                 {{ form.phone_number }}
+                {% if form.phone_number.errors %}
+                <div class="text-danger">
+                  {% for error in form.phone_number.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
               </div>
             </div>
 
+
             <div class="row mb-3">
-              <label for="Email" class="col-md-4 col-lg-3 col-form-label">ایمیل</label>
+              <label class="col-md-4 col-lg-3 col-form-label">آیا شما در شرکت بید بلند کار میکنید؟</label>
               <div class="col-md-8 col-lg-9">
-                {{ form.email }}
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="works_at_company" id="works_at_company_yes" value="yes">
+                  <label class="form-check-label" for="works_at_company_yes">بله</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="works_at_company" id="works_at_company_no" value="no">
+                  <label class="form-check-label" for="works_at_company_no">خیر</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3" style="display: none;" id="personnel_number_field">
+              <label for="Email" class="col-md-4 col-lg-3 col-form-label">شماره پرسنلی</label>
+              <div class="col-md-8 col-lg-9">
+                {{ form.personnel_number }}
+                {% if form.personnel_number.errors %}
+                <div class="text-danger">
+                  {% for error in form.personnel_number.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
               </div>
             </div>
 
@@ -74,5 +155,28 @@
       </div>
     </div>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const yesRadio = document.getElementById('works_at_company_yes');
+      const noRadio = document.getElementById('works_at_company_no');
+      const personnelNumberField = document.getElementById('personnel_number_field');
+
+      // Function to toggle visibility
+      function togglePersonnelNumberField() {
+        if (yesRadio.checked) {
+          personnelNumberField.style.display = 'flex'; // Show the field
+        } else {
+          personnelNumberField.style.display = 'none'; // Hide the field
+        }
+      }
+
+      // Add event listeners to radio buttons
+      yesRadio.addEventListener('change', togglePersonnelNumberField);
+      noRadio.addEventListener('change', togglePersonnelNumberField);
+
+      // Initialize visibility on page load
+      togglePersonnelNumberField();
+    });
+  </script>
 </main>
 {% endblock %}

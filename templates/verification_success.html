@@ -1,0 +1,17 @@
+{% extends 'public_base.html' %}
+{% block title %}حساب فعال شد{% endblock %}
+{% block content %}
+<main class="bg-light">
+
+    <div class="container d-flex justify-content-center align-items-start pt-5"> 
+        <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%;">
+            <div class="card-body text-right">
+                <h1 class="card-title text-success">حساب شما با موفقیت تأیید شد!</h1>
+                <p class="card-text">تبریک می‌گوییم، حساب شما با موفقیت تأیید شد. حالا می‌توانید وارد حساب کاربری خود شوید.</p>
+                <a href="{% url 'login' %}" class="btn btn-primary btn-block">ورود به حساب</a>
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock %}
