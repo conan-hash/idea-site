@@ -122,14 +122,19 @@
             <div class="row mb-3">
               <label class="col-md-4 col-lg-3 col-form-label">آیا شما در شرکت بید بلند کار میکنید؟</label>
               <div class="col-md-8 col-lg-9">
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="works_at_company" id="works_at_company_yes" value="yes">
-                  <label class="form-check-label" for="works_at_company_yes">بله</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="works_at_company" id="works_at_company_no" value="no">
-                  <label class="form-check-label" for="works_at_company_no">خیر</label>
-                </div>
+                {% for radio in form.works_at_company %}
+                  <div class="form-check form-check-inline">
+                    {{ radio.tag }}
+                    <label class="form-check-label">{{ radio.choice_label }}</label>
+                  </div>
+                {% endfor %}
+                {% if form.works_at_company.errors %}
+                  <div clsss="text-danger">
+                      {% for error in form.works_at_company.errors %}
+                        {{ error }}
+                      {% endfor %}
+                  </div>
+                  {% endif %}
               </div>
             </div>
 
@@ -157,22 +162,23 @@
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const yesRadio = document.getElementById('works_at_company_yes');
-      const noRadio = document.getElementById('works_at_company_no');
-      const personnelNumberField = document.getElementById('personnel_number_field');
+      const personnelNumberField = document.getElementById('personnel_number_field'); 
 
       // Function to toggle visibility
       function togglePersonnelNumberField() {
-        if (yesRadio.checked) {
+        const selectedValue = document.querySelector('input[name="works_at_company"]:checked').value;
+        if (selectedValue === 'yes') {
           personnelNumberField.style.display = 'flex'; // Show the field
         } else {
           personnelNumberField.style.display = 'none'; // Hide the field
+          personnelNumberField.querySelector("input").value = "";
         }
       }
 
       // Add event listeners to radio buttons
-      yesRadio.addEventListener('change', togglePersonnelNumberField);
-      noRadio.addEventListener('change', togglePersonnelNumberField);
+      document.querySelectorAll('input[name="works_at_company"]').forEach(radio => {
+        radio.addEventListener("change", togglePersonnelNumberField);
+      });
 
       // Initialize visibility on page load
       togglePersonnelNumberField();

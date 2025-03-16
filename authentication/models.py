@@ -31,7 +31,7 @@ class CustomUser(AbstractUser):
     major = models.CharField(max_length=255, null=True)
     phone_number = models.CharField(max_length=15, null=True)
     national_id = models.CharField(max_length=10, null=True)
-    personnel_number = models.CharField(max_length=10, null=True)
+    personnel_number = models.CharField(max_length=10, null=True, blank=True)
 
     #profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     

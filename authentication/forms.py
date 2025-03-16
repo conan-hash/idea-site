@@ -29,6 +29,10 @@ class SignUpForm(UserCreationForm):
 
 
 class ProfileCompletionForm(forms.ModelForm):
+    works_at_company = forms.ChoiceField(choices=[("yes", "بله"), ("no", "خیر")],
+                                         widget=forms.RadioSelect, 
+                                         required=True
+                                         )
     class Meta:
         model = CustomUser
         fields = ('first_name', 'last_name', 'work_place', 'major', 'phone_number', 'national_id','personnel_number', 'job')
@@ -70,6 +74,15 @@ class ProfileCompletionForm(forms.ModelForm):
             }),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        works_at_company = cleaned_data.get("works_at_company")
+        personnel_number = cleaned_data.get("personnel_number")
+        if works_at_company == "yes" and not personnel_number:
+            self.add_error("personnel_number", "لطفا شماره پرسنلی خود را وارد کنید.")
+        elif works_at_company == "no":
+            cleaned_data["personnel_number"] = ""
+        return cleaned_data
 
 
 class EditUserProfileForm(forms.ModelForm):
