@@ -86,20 +86,20 @@
                             <tbody>
                                 {% for idea in ideas %}
                                 <tr>
-                                    <td><a href="{% url 'track-idea' idea.identifier %}">{{ idea.identifier }}</a></td>
+                                    <td><a href="{% url 'track_idea' idea.identifier %}">{{ idea.identifier }}</a></td>
                                     <td>{{ idea.title }}</td>
                                     <td>{{ idea.keywords }}</td>
                                     <td>
                                         {% if idea.status == 'pending' %}
                                             <span class="badge bg-primary">در انتظار بررسی</span>
-                                        {% elif idea.status == 'approved' %}
-                                            <span class="badge bg-success">تایید شده</span>
                                         {% elif idea.status == 'proposal' %}
                                             <span class="badge bg-info">پروپوزال</span>
                                         {% elif idea.status == 'referee' %}
                                             <span class="badge bg-secondary">داوری</span>
-                                        {% elif idea.status == 'reject' %}
+                                        {% elif idea.status == 'rejected' %}
                                             <span class="badge bg-danger">رد شده</span>
+                                        {% elif idea.status == 'approved' %}
+                                            <span class="badge bg-success">تایید شده</span>
                                         {% endif %}
                                     </td>
                                     <td>{{ idea.date|date:"Y/m/d" }}</td>

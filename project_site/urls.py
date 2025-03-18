@@ -22,7 +22,7 @@ from django.conf import settings # Application settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
-
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -37,7 +37,7 @@ urlpatterns = [
     path('home/user-profile/', user_profile, name='user_profile'),
 	path('home/user-ideas/', user_ideas, name='user_ideas'), 
     path('home/ideas/', all_ideas, name='all_ideas'),
-    path('home/track-idea/<str:identifier>/', track_idea, name='track-idea'),
+    path('home/track-idea/<str:identifier>/', track_idea, name='track_idea'),
     path('home/referee/', referee, name='referee'),
     path('logout/', user_logout, name='logout'),
     path('home/user-profile/', user_profile, name='user_profile'),
@@ -52,3 +52,5 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

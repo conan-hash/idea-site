@@ -58,32 +58,67 @@
 <div class="card p-4">
   <h5 class="form-title">فرم ثبت ایده نوآورانه</h5>
 
-  <form class="row g-3" method="POST">
+  <form class="row g-3" method="POST" novalidate>
     {% csrf_token %}
 
     <div class="col-12">
       <label for="inputTitle" class="form-label"><i class="bi bi-lightbulb"></i>عنوان ایده نوآورانه</label>
       {{ form.title }}
+      {% if form.title.errors %}
+      <div class="text-danger text-center">
+        {% for error in form.title.errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
     </div>
 
     <div class="col-12">
       <label for="inputTitle" class="form-label"><i class="bi bi-tags"></i>لغات کلیدی</label>
       {{ form.keywords }}
+      {% if form.keywords.errors %}
+      <div class="text-danger text-center">
+        {% for error in form.keywords.errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
     </div>
 
     <div class="col-12">
       <label for="inputGoal" class="form-label"><i class="bi bi-bullseye"></i>هدف ایده</label>
       {{ form.goal }}
+      {% if form.goal.errors %}
+      <div class="text-danger text-center">
+        {% for error in form.goal.errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
     </div>
 
     <div class="col-12">
       <label for="textareaImportance" class="form-label"><i class="bi bi-exclamation-circle"></i>ضرورت و اهمیت ایده</label>
       {{ form.importance }}
+      {% if form.importance.errors %}
+      <div class="text-danger text-center">
+        {% for error in form.importance.errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
     </div>
 
     <div class="col-12">
       <label for="textareaDetails" class="form-label"><i class="bi bi-clipboard"></i>توضیحات تکمیلی</label>
       {{ form.details }}
+      {% if form.details.errors %}
+      <div class="text-danger text-center">
+        {% for error in form.details.errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
     </div>
 
     <div class="text-center mt-4">

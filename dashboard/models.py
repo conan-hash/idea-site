@@ -2,6 +2,9 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.conf import settings
 from django.core.validators import MaxValueValidator
+from authentication.models import CustomUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 phone_regex = RegexValidator(
@@ -20,19 +23,43 @@ class Proposal(models.Model):
         ('phd', 'پایان نامه دکتری'),
         ('masters', 'پایان نامه کارشناسی ارشد')
     ], verbose_name="نوع پروژه")
-    research_pole = models.CharField(max_length=255, verbose_name="قطب پژوهشی")
-    research_pole_username = models.CharField(max_length=255, verbose_name="نام موسسه")
+    researchPole = models.CharField(max_length=100, choices=[
+        ('research', 'پروژه پژوهشی'),
+        ('phd', 'پایان نامه دکتری'),
+        ('masters', 'پایان نامه کارشناسی ارشد')
+    ], verbose_name="قطب پژوهشی")
+    researchPoleUsername = models.CharField(max_length=255, verbose_name="نام موسسه")
     developer = models.CharField(max_length=255, verbose_name="توسعه دهنده")
-    costumer = models.CharField(max_length=255, verbose_name="متقاضی")
+    finalCustomer = models.CharField(max_length=255, verbose_name="متقاضی/مشتری نهایی")
     nameAndNumberofPlan = models.CharField(max_length=255, verbose_name="نام و شماره طرح")
-    #irst_nameAndLast_name = models.CharField(max_length=255, verbose_name="First and Last Name")
-    #work_place = models.CharField(max_length=255, verbose_name="Workplace")
-    #major = models.CharField(max_length=255, verbose_name="Major")
-    #work_address = models.TextField(verbose_name="Work Address")
-    #job = models.CharField(max_length=255, verbose_name="Job")
-    #work_phone = models.CharField(max_length=15, verbose_name="Work Phone")
-    #email = models.EmailField(verbose_name="Email Address")
-    #phone = models.CharField(max_length=15, verbose_name="Phone Number")
+    projectImportance = models.CharField(max_length=100, choices=[
+        ('fundamental', 'بنیادی'),
+        ('applied', 'کاربردی'),
+        ('developmental', 'توسعه ای'),
+        ('studies', 'مطالعاتی')
+    ], verbose_name="اهمیت پروژه")
+    researchGroup = models.CharField(max_length=100, choices=[
+        ('research', 'پروژه پژوهشی'),
+        ('phd', 'پایان نامه دکتری'),
+        ('masters', 'پایان نامه کارشناسی ارشد')
+    ], verbose_name="گروه پژوهشی")
+    chiefName = models.CharField(max_length=255, verbose_name="نام رئیس گروه پژوهشی")
+    teamName = models.CharField(max_length=255, verbose_name="نام تیم پژوهشی")
+    secretaryName = models.CharField(max_length=255, verbose_name="نام دبیر تیم پژوهشی")
+    projectScale = models.CharField(max_length=100, choices=[
+        ('feasibility', 'امکان سنجی'),
+        ('lab', 'آزمایشگاهی'),
+        ('small', 'پیشتاز کوچک'),
+        ('large', 'پیشتاز بزرگ'),
+        ('industrial', 'صنعتی')
+    ], verbose_name="مقیاس پروژه")
+    goal = models.TextField(verbose_name="هدف")
+    achievement = models.TextField(verbose_name="دستاورد")
+    application = models.TextField(verbose_name="کاربرد")
+    economicBenefits = models.TextField(verbose_name="صرفه اقتصادی")
+    relatedReaserch = models.TextField(verbose_name="پژوهش مرتبط")
+    researchMethod = models.TextField(verbose_name="روش تحقیق")
+    service = models.TextField(verbose_name="خدمات")
 
 
 
@@ -47,18 +74,7 @@ class Idea(models.Model):
     proposal = models.OneToOneField(Proposal, null=True, blank=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, verbose_name="وضعیت")
-    proposal_modifacation = models.BooleanField(default=False, verbose_name="اصلاح پروپوزال")
-    judge1 = models.CharField(max_length=255, null=True, blank=True, verbose_name=" داور اول")
-    judge2 = models.CharField(max_length=255, null=True, blank=True, verbose_name=" داور دوم")
-    judge3 = models.CharField(max_length=255, null=True, blank=True, verbose_name=" داور سوم")
-    judge4 = models.CharField(max_length=255, null=True, blank=True, verbose_name=" داور چهارم")
-    judge1_score = models.PositiveIntegerField(null=True, blank=True, verbose_name="امتیاز داور اول")
-    judge2_score = models.PositiveIntegerField(null=True, blank=True, verbose_name="امتیاز داور دوم")
-    judge3_score = models.PositiveIntegerField(null=True, blank=True, verbose_name="امتیاز داور سوم")
-    judge4_score = models.PositiveIntegerField(null=True, blank=True, verbose_name="امتیاز داور چهارم")
-    
 
-    
     def save(self, *args, **kwargs):
         if not self.pk:  
             date_str = self.date.strftime("%Y%m%d")
@@ -68,35 +84,48 @@ class Idea(models.Model):
             ).count() + 1 
             
             self.identifier = f"{date_str}-{same_day_count:02d}"
-
-        final_average = self.calculate_average()
-        if final_average is not None and final_average >= 14:
-            self.is_finally_approved = True
-        else:
-            self.is_finally_approved = False
         super().save(*args, **kwargs)
 
 
-    def calculate_average(self):
-        scores = [self.judge1_score, self.judge2_score, self.judge3_score, self.judge4_score]
-        valid_scores = [score for score in scores if score is not None]
-        if valid_scores:
-            return sum(valid_scores) / len(valid_scores)
+class JudgeEvaluation(models.Model):
+    idea = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name="evaluations")
+    judge = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="evaluations")
+    assigned_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="assigned_judges")
+    assigned_at = models.DateTimeField(auto_now_add=True)
+    score = models.IntegerField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ("idea", "judge")
+
+class Presentation(models.Model):
+    idea = models.OneToOneField(Idea, on_delete=models.CASCADE, related_name="presentation")
+    presentation_time = models.DateTimeField(null=True)
+    presentation_file = models.FileField(upload_to='presentations/', null=True)
+    approved = models.BooleanField(default=False)
+    average_grade = models.FloatField(null=True)
+
+    def calculate_average_grade(self):
+        evaluations = self.idea.evaluations.all()
+        total_score = sum([eval.score for eval in evaluations if eval.score is not None])
+        count = len([eval for eval in evaluations if eval.score is not None])
+        if count > 0:
+            return total_score / count
         return None
+    
 
-    def __str__(self):
-        return self.title
+@receiver(post_save, sender=Presentation)
+def update_average_grade_after_approval(sender, instance, **kwargs):
+    if instance.approved:
+        average = instance.calculate_average_grade()
+        if average is not None:
+            instance.average_grade = average
+            instance.save()
+
+    
 
 
 
-class Contributor(models.Model):
-    idea = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='contributors')
-    name = models.CharField(max_length=255)
-    contribution_percent_idea = models.PositiveIntegerField(
-        help_text="Percentage of contribution",
-        validators=[MaxValueValidator(100)]  
-    )
-    contribution_percent_project = models.PositiveIntegerField(
-        help_text="Percentage of contribution",
-        validators=[MaxValueValidator(100)]  
-    )
+
+
+

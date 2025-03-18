@@ -128,6 +128,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') #all static files will be co
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
+# MEDIA
+MEDIA_URL = "/presentations/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "presentations")
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 

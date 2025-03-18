@@ -23,6 +23,13 @@
     margin: 0 0.5rem;
 }
       </style>
+      <style>
+        .error {
+            color: red;  /* Make the text red */
+            font-size: 0.9em;  /* Smaller font size for error messages */
+            margin-top: 5px;  /* Add some spacing above the error message */
+        }
+    </style>
     </div><!-- End Page Title -->  
 
     <section class="section profile">
@@ -58,13 +65,8 @@
                   </div>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label">شرکت</div>
-                    <div class="col-lg-9 col-md-8">Lueilwitz, Wisoky and Leuschke</div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">شغل</div>
-                    <div class="col-lg-9 col-md-8">{{ user.work_place }}</div>
+                    <div class="col-lg-3 col-md-4 label">کد ملی</div>
+                    <div class="col-lg-9 col-md-8">{{ user.national_id }}</div>
                   </div>
 
                   <div class="row">
@@ -84,37 +86,16 @@
                   <!-- Profile Edit Form -->
                   <form>
                     <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">نام</label>
+                      <label for="first_name" class="col-md-4 col-lg-3 col-form-label">نام</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="first_name" type="text" class="form-control" id="fullName" value="{{user.first_name}}">
+                        <input name="first_name" type="text" class="form-control" id="first_name" value="{{user.first_name}}">
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">نام خانوادگی</label>
+                      <label for="last_name" class="col-md-4 col-lg-3 col-form-label">نام خانوادگی</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="last_name" type="text" class="form-control" id="fullName" value="{{user.last_name}}">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="about" class="col-md-4 col-lg-3 col-form-label">About</label>
-                      <div class="col-md-8 col-lg-9">
-                        <textarea name="about" class="form-control" id="about" style="height: 100px">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</textarea>
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="company" class="col-md-4 col-lg-3 col-form-label">شرکت</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="company" type="text" class="form-control" id="company" value="Lueilwitz, Wisoky and Leuschke">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Job" class="col-md-4 col-lg-3 col-form-label">شغل</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="job" type="text" class="form-control" id="Job" value="Web Designer">
+                        <input name="last_name" type="text" class="form-control" id="last_name" value="{{user.last_name}}">
                       </div>
                     </div>
 
@@ -126,23 +107,37 @@
                     </div>
 
                     <div class="row mb-3">
-                      <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
+                      <label for="major" class="col-md-4 col-lg-3 col-form-label">رشته</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="address" type="text" class="form-control" id="Address" value="A108 Adam Street, New York, NY 535022">
+                        <input name="major" type="text" class="form-control" id="major" value="{{user.major}}">
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="Phone" class="col-md-4 col-lg-3 col-form-label">تلفن</label>
+                      <label for="work_place" class="col-md-4 col-lg-3 col-form-label">شرکت</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="phone" type="text" class="form-control" id="Phone" value="{{user.phone_number}}">
+                        <input name="work_place" type="text" class="form-control" id="work_place" value="{{user.work_place}}">
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="Email" class="col-md-4 col-lg-3 col-form-label">ایمیل</label>
+                      <label for="job" class="col-md-4 col-lg-3 col-form-label">شغل</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="email" type="email" class="form-control" id="Email" value="{{user.email}}">
+                        <input name="job" type="text" class="form-control" id="job" value="{{user.job}}">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="phone_number" class="col-md-4 col-lg-3 col-form-label">تلفن</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="phone_number" type="text" class="form-control" id="phone_number" value="{{user.phone_number}}">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="email" class="col-md-4 col-lg-3 col-form-label">ایمیل</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="email" type="email" class="form-control" id="email" value="{{user.email}}">
                       </div>
                     </div>
 
@@ -155,33 +150,49 @@
 
                 <div class="tab-pane fade pt-3" id="profile-change-password">
                   <!-- Change Password Form -->
-                  <form>
-
+                  <form method="POST">
+                    {% csrf_token %}
                     <div class="row mb-3">
                       <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">رمز عبور فعلی</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="password" type="password" class="form-control" id="currentPassword">
+                        {{ passwordform.old_password }}
+                        {% if passwordform.old_password.errors %}
+                        <div class="error">{{ passwordform.old_password.errors }}</div>
+                        {% endif %}
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">رمز عبور جدید</label>
+                      <label class="col-md-4 col-lg-3 col-form-label">رمز عبور جدید</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="newpassword" type="password" class="form-control" id="newPassword">
+                        {{ passwordform.new_password1 }}
+                        {% if passwordform.new_password1.errors %}
+                        <div class="error">{{ passwordform.new_password1.errors }}</div>
+                        {% endif %}
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">رمز عبور جدید را دوباره وارد کنید</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="renewpassword" type="password" class="form-control" id="renewPassword">
+                        {{ passwordform.new_password2 }}
+                        {% if passwordform.new_password2.errors %}
+                        <div class="error">{{ passwordform.new_password2.errors }}</div>
+                        {% endif %}
                       </div>
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">تغییر رمز عبور</button>
+                      <button type="submit" name="changepass" class="btn btn-primary">تغییر رمز عبور</button>
                     </div>
                   </form><!-- End Change Password Form -->
+                  {% if messages %}
+                  <div>
+                      {% for message in messages %}
+                          <p>{{ message }}</p>
+                      {% endfor %}
+                  </div>
+              {% endif %}
 
                 </div>
 

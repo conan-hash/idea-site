@@ -1,6 +1,9 @@
 from django import forms
-from .models import Idea, Proposal, Contributor
+from .models import Idea, Proposal, Presentation, JudgeEvaluation
 from django.forms import inlineformset_factory
+from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import PasswordChangeForm
 
 class IdeaForm(forms.ModelForm):
     class Meta:
@@ -18,51 +21,54 @@ class IdeaForm(forms.ModelForm):
 class ProposalForm(forms.ModelForm):
     class Meta:
         model = Proposal  
-        fields = [
-            'projectType', 'research_pole', 'research_pole_username',
-            'developer', 'costumer', 'nameAndNumberofPlan'
-        ]
+        fields = ['projectType']
+
+
+
+
+class UserPresentationForm(forms.ModelForm):
+    class Meta:
+        model = Presentation
+        fields = ['presentation_file']
+
+    def clean_presentation_file(self):
+        file = self.cleaned_data.get('presentation_file')
+        if file and file.size > 10 * 1024 * 1024:  # 10 MB size limit for the file
+            raise ValidationError("فایل ارائه باید کمتر از ۱۰ مگابایت باشد.")
+        return file
+
+class EmployeePresentationForm(forms.ModelForm):
+    class Meta:
+        model = Presentation
+        fields = ['presentation_time']
         widgets = {
-            'projectType': forms.Select(attrs={'class': 'form-select', 'dir': 'rtl'}),
-            'research_pole': forms.Select(attrs={'class': 'form-select', 'dir': 'rtl'}),
-            'research_pole_username': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-            'developer': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-            'costumer': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-            'nameAndNumberofPlan': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-            'first_nameAndLast_name': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-            'work_place': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-            'major': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-            'work_address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'dir': 'rtl'}),
-            'job': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-            'work_phone': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control', 'dir': 'rtl'}),
+        'presentation_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
-
-
+        
+    def clean_presentation_date(self):
+        date = self.cleaned_data.get('presentation_date')
+        if date and date < timezone.now().date():
+            raise ValidationError("تاریخ ارائه باید از امروز بعد باشد.")
+        return date
 
 class EvaluationForm(forms.ModelForm):
     class Meta:
-        model = Idea
-        fields = ['judge1_score', 'judge2_score', 'judge3_score', 'judge4_score']
-        widgets = {
-            'judge1_score': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 20}),
-            'judge2_score': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 20}),
-            'judge3_score': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 20}),
-            'judge4_score': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 20}),
-        }
+        model = JudgeEvaluation
+        fields = ['score', 'comment']
+
+    def clean_score(self):
+        score = self.cleaned_data.get('score')
+        if not (1 <= score <= 20):
+            raise ValidationError("امتیاز باید بین 1 و 20 باشد.")
+        return score
 
 
+class CustomPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-class ContributorForm(forms.ModelForm):
-    class Meta:
-        model = Contributor
-        fields = ['name', 'contribution_percent_idea', 'contribution_percent_project']
+        self.fields['old_password'].widget.attrs.update({'class': 'form-control'})
+        self.fields['new_password1'].widget.attrs.update({'class': 'form-control'})
+        self.fields['new_password2'].widget.attrs.update({'class': 'form-control'})
 
-ContributorFormSet = inlineformset_factory(
-    Idea,                      
-    Contributor,             
-    form=ContributorForm,      
-    extra=1,                   
-    can_delete=False,          
-)
+
